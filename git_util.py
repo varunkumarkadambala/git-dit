@@ -120,3 +120,38 @@ def fetch_issues():
     cmd = 'git checkout dit-issues'
     process = os.popen(cmd)
     process = process.read()
+    issues = []
+    for issue in os.listdir('issues'):
+        json_path = 'issues/' + str(issue) + '/issue.json'
+        if os.path.exists(json_path):
+            with open(json_path, "r") as jsonFile:
+                data = json.load(jsonFile)
+                issues.append(data)
+
+    cmd = 'git checkout ' + current
+    process = os.popen(cmd)
+    process = process.read()
+    return issues
+
+
+def fetch_comments(id):
+    current = current_branch()
+    cmd = 'git checkout dit-issues'
+    process = os.popen(cmd)
+    process = process.read()
+    comments = []
+    comments_dir = 'issues/{0}/comments/'.format(id)
+    if not os.path.exists(comments_dir):
+        return comments
+    for comment in os.listdir(comments_dir):
+        try:
+            json_path = comments_dir + comment
+            with open(json_path, "r") as jsonFile:
+                data = json.load(jsonFile)
+                comments.append(data)
+        except:
+            continue
+    cmd = 'git checkout ' + current
+    process = os.popen(cmd)
+    process = process.read()
+    return comments

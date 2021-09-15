@@ -59,3 +59,18 @@ def close_issue(id):
 
 # View all Issues
 def view_issues():
+    issues = git.fetch_issues()
+    str_fmt = "{:<45} {:<25} {:<8}"
+    print(str_fmt.format('Issue', 'Created by', 'Status'))
+    for issue in issues:
+        print(str_fmt.format(issue['message'], issue['createdBy'], issue['status']))
+    return issues
+
+
+def view_comments(id):
+    comments = git.fetch_comments(id)
+    str_fmt = "{:<45} {:<25}"
+    print(str_fmt.format('Comment', 'Comment by'))
+    for comment in comments:
+        print(str_fmt.format(comment['message'], comment['commentBy']))
+    return comments
