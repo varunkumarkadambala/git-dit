@@ -1,0 +1,9 @@
+{
+  "issueId" : "Generated Using UUID",
+  "description" : "The description of the issue reported by the creator",
+  "status" : "Active/Closed",
+  "createdBy" : "Should be Git User Id",
+  "createdOn" : "time.now",
+  "lastModified": "time.now for every update",
+  "assignee" : "Git User Id"
+}
