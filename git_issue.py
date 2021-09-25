@@ -16,7 +16,12 @@ def main(argv=sys.argv[1:]):
 
     if args.command == "init":
         init_repo(args)
-
+    elif args.command == "new":
+        add_issue(args)
+    elif args.command == "comment":
+        add_comment(args)
+    elif args.comment == "delete":
+        delete_issue(args)
 
 # My Functionalities
 # F-1 Create a Repo
@@ -60,6 +65,9 @@ def add_issue(args):
     return issue_id, issue_json, issue
 
 
+# Add Comment to an issue
+# 1. Generate Comment Id
+# 2. Create the json for comment data
 argsp = argsubparsers.add_parser("comment", help="Add a new comment for an issue")
 argsp.add_argument("message",
                    help="Description for the comment on the issue")
@@ -67,7 +75,6 @@ argsp.add_argument("id",
                    help="ID of the issue to be commented on")
 
 
-# Add Comment to an issue
 def add_comment(args):
     comment_id = str(uuid.uuid4())
     comment_data = {"message": args.message,
@@ -79,13 +86,23 @@ def add_comment(args):
 
 
 # Delete an Issue - Doesn't really delete the issue, but changes the status to deleted
-def delete_issue(id):
-    return id, git.update_issue_status(id, 'Deleted')
+argsp = argsubparsers.add_parser("delete", help="Add a new comment for an issue")
+argsp.add_argument("id",
+                   help="ID of the issue to be deleted")
+
+
+def delete_issue(args):
+    return args.id, git.update_issue_status(id, 'Deleted')
 
 
 # Close an Issue
-def close_issue(id):
-    return id, git.update_issue_status(id, 'Closed')
+argsp = argsubparsers.add_parser("close", help="Add a new comment for an issue")
+argsp.add_argument("id",
+                   help="ID of the issue to be deleted")
+
+
+def close_issue(args):
+    return args.id, git.update_issue_status(id, 'Closed')
 
 
 # View all Issues

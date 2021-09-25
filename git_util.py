@@ -104,7 +104,7 @@ def create_comment(issue_id, comment_id, data):
 
 def update_issue_status(id, status):
     current = current_branch()
-    cmd = 'git checkout dit-issues'
+    cmd = 'git checkout git-issues'
     process = os.popen(cmd)
     process = process.read()
     json_path = 'issues/' + id + '/issue.json'
