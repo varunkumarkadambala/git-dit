@@ -20,14 +20,18 @@ def main(argv=sys.argv[1:]):
         add_issue(args)
     elif args.command == "comment":
         add_comment(args)
-    elif args.comment == "delete":
+    elif args.command == "delete":
         delete_issue(args)
+    elif args.command == "close":
+        close_issue(args)
+    elif args.command == "show":
+        view_issues(args)
+
 
 # My Functionalities
 # F-1 Create a Repo
 # 1. Check if branch already exists
 # 2. Else create a new empty branch
-
 argsp = argsubparsers.add_parser("init", help="Initialize a new branch for issue tracking.")
 
 
@@ -47,7 +51,6 @@ def init_repo(args):
 # 2. Get User Details
 # 3. Generate Issue Id
 # 4. Create a issue.json file
-
 argsp = argsubparsers.add_parser("new", help="Create a new issue")
 argsp.add_argument("message",
                    help="Description for reporting the issue")
@@ -86,7 +89,7 @@ def add_comment(args):
 
 
 # Delete an Issue - Doesn't really delete the issue, but changes the status to deleted
-argsp = argsubparsers.add_parser("delete", help="Add a new comment for an issue")
+argsp = argsubparsers.add_parser("delete", help="Delete an issue")
 argsp.add_argument("id",
                    help="ID of the issue to be deleted")
 
@@ -96,7 +99,7 @@ def delete_issue(args):
 
 
 # Close an Issue
-argsp = argsubparsers.add_parser("close", help="Add a new comment for an issue")
+argsp = argsubparsers.add_parser("close", help="Close an issue")
 argsp.add_argument("id",
                    help="ID of the issue to be deleted")
 
@@ -106,7 +109,10 @@ def close_issue(args):
 
 
 # View all Issues
-def view_issues():
+argsp = argsubparsers.add_parser("show", help="View all issues")
+
+
+def view_issues(args):
     issues = git.fetch_issues()
     str_fmt = "{:<45} {:<25} {:<8}"
     print(str_fmt.format('Issue', 'Created by', 'Status'))

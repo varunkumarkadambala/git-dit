@@ -121,7 +121,7 @@ def update_issue_status(id, status):
 
 def fetch_issues():
     current = current_branch()
-    cmd = 'git checkout dit-issues'
+    cmd = 'git checkout git-issues'
     process = os.popen(cmd)
     process = process.read()
     issues = []
