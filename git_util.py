@@ -54,7 +54,8 @@ def branch_in_remote(branch):
 
 # Git pull remote to local
 def pull_issues():
-    cmd = 'git checkout git-issues; git pull origin git-issues'
+    current = current_branch()
+    cmd = 'git checkout git-issues; git pull origin git-issues; git checkout {}'.format(current)
     stream = os.popen(cmd)
     output = stream.read()
     return output
@@ -159,3 +160,11 @@ def fetch_comments(id):
     process = os.popen(cmd)
     process = process.read()
     return comments
+
+
+def push_issues():
+    current = current_branch()
+    cmd = 'git checkout git-issues; git push origin git-issues; git checkout {}'.format(current)
+    stream = os.popen(cmd)
+    output = stream.read()
+    return output

@@ -136,3 +136,19 @@ def view_comments(args):
     for comment in comments:
         print(str_fmt.format(comment['message'], comment['commentBy']))
     return comments
+
+
+# Push all issues to remote
+argsp = argsubparsers.add_parser("push", help="Push all issues to remote")
+
+
+def push_issues(args):
+    return git.push_issues()
+
+
+# Pull all issues from remote to local
+argsp = argsubparsers.add_parser("pull", help="Pull all issues from remote to local")
+
+
+def pull_issues(args):
+    return git.pull_issues()
