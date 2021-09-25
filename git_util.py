@@ -140,7 +140,7 @@ def fetch_issues():
 
 def fetch_comments(id):
     current = current_branch()
-    cmd = 'git checkout dit-issues'
+    cmd = 'git checkout git-issues'
     process = os.popen(cmd)
     process = process.read()
     comments = []

@@ -26,6 +26,8 @@ def main(argv=sys.argv[1:]):
         close_issue(args)
     elif args.command == "show":
         view_issues(args)
+    elif args.command == "get-comments":
+        view_comments(args)
 
 
 # My Functionalities
@@ -101,7 +103,7 @@ def delete_issue(args):
 # Close an Issue
 argsp = argsubparsers.add_parser("close", help="Close an issue")
 argsp.add_argument("id",
-                   help="ID of the issue to be deleted")
+                   help="ID of the issue to be closed")
 
 
 def close_issue(args):
@@ -121,8 +123,14 @@ def view_issues(args):
     return issues
 
 
-def view_comments(id):
-    comments = git.fetch_comments(id)
+# View all Comments on an issues
+argsp = argsubparsers.add_parser("get-comments", help="View all comments on an issue")
+argsp.add_argument("id",
+                   help="ID of the issue")
+
+
+def view_comments(args):
+    comments = git.fetch_comments(args.id)
     str_fmt = "{:<45} {:<25}"
     print(str_fmt.format('Comment', 'Comment by'))
     for comment in comments:
