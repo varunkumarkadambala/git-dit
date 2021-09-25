@@ -42,9 +42,15 @@ def init_repo(args):
 # 2. Get User Details
 # 3. Generate Issue Id
 # 4. Create a issue.json file
-def add_issue(description):
+
+argsp = argsubparsers.add_parser("new", help="Create a new issue")
+argsp.add_argument("message",
+                   help="Description for reporting the issue")
+
+
+def add_issue(args):
     issue_id = str(uuid.uuid4())
-    issue_json = {"message": description,
+    issue_json = {"message": args.message,
                   "status": "Active",
                   "lastModified": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
                   "createdBy": git.active_user(),

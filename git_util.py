@@ -69,7 +69,7 @@ def active_user():
 
 def create_issue(issue_id, data):
     current = current_branch()
-    cmd = 'git checkout dit-issues'
+    cmd = 'git checkout git-issues'
     process = os.popen(cmd)
     process = process.read()
     if not os.path.exists('issues'):
@@ -79,7 +79,7 @@ def create_issue(issue_id, data):
     json_path = new_dir + '/issue.json'
     with open(json_path, "w") as outfile:
         json.dump(data, outfile)
-    cmd = 'git add ' + json_path + ';git commit -m "Creating issue ' + issue_id + '";git checkout ' + current
+    cmd = 'git add {0};git commit -m "Creating issue {1}";git checkout {2}'.format(json_path, issue_id, current)
     stream = os.popen(cmd)
     output = stream.read()
     return output
