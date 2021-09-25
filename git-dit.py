@@ -1,20 +1,38 @@
 #!/usr/bin/env python3
 import git_util as git
 import uuid
+import sys
 from datetime import datetime
+import argparse
+
+argparser = argparse.ArgumentParser(description="Decentralised Issue Tracker")
+
+argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
+argsubparsers.required = True
+
+
+def main(argv=sys.argv[1:]):
+    args = argparser.parse_args(argv)
+
+    if args.command == "init":
+        init_repo(args)
 
 
 # My Functionalities
 # F-1 Create a Repo
 # 1. Check if branch already exists
 # 2. Else create a new empty branch
-def init_repo():
+
+argsp = argsubparsers.add_parser("init", help="Initialize a new branch for issue tracking.")
+
+
+def init_repo(args):
     assert git.is_git_repo(), "Not a Git repository"
-    if git.branch_in_local('dit-issues'):
+    if git.branch_in_local('git-issues'):
         pass
     else:
-        git.create_empty_local_branch('dit-issues')
-    if git.branch_in_remote('dit-issues'):
+        git.create_empty_local_branch('git-issues')
+    if git.branch_in_remote('git-issues'):
         git.pull_issues()
     return "New Issues Branch Initiated in repository"
 

@@ -11,6 +11,16 @@ def is_git_repo():
     return output == 'true\n'
 
 
+# Check if branch is present in repo
+def branch_in_local(branch):
+    cmd = 'git branch --list {0}'.format(branch)
+    exp_output = '* ' + branch + '\n'
+    stream = os.popen(cmd)
+    output = stream.read()
+    return output == exp_output
+
+
+# Get Current Branch
 def current_branch():
     cmd = 'git rev-parse --abbrev-ref HEAD'
     stream = os.popen(cmd)
@@ -18,21 +28,15 @@ def current_branch():
     return output.split('\n')[0]
 
 
-# Check if branch is present in repo
-def branch_in_local(branch):
-    cmd = 'git branch --list ' + branch
-    exp_output = '* ' + branch + '\n'
-    stream = os.popen(cmd)
-    output = stream.read()
-    return output == exp_output
-
-
 # Create empty local branch
 def create_empty_local_branch(branch):
     current = current_branch()
-    cmd = 'git checkout --orphan dit-issues;git reset --hard;' \
-          'echo "This branch stores all the issues for the decentralised issue tracker" > README.txt;' \
-          'git add README.txt;git commit -m "Creating Empty Branch dit-issues";git checkout ' + current
+    cmd = 'git checkout --orphan {0};git reset --hard;'.format(branch)
+    stream = os.popen(cmd)
+    output = stream.read()
+    with open("README.txt", "w") as file:
+        file.write("This branch stores all the issues for the decentralised issue tracker")
+    cmd = 'git add README.txt;git commit -m "Creating Empty Branch for issue tracker";git checkout {0}'.format(current)
     stream = os.popen(cmd)
     output = stream.read()
     return output
@@ -40,7 +44,7 @@ def create_empty_local_branch(branch):
 
 # Check if branch is present in remote
 def branch_in_remote(branch):
-    cmd = 'git ls-remote --heads origin ' + branch
+    cmd = 'git ls-remote --heads origin {}'.format(branch)
     exp_output = branch + '\n'
     stream = os.popen(cmd)
     output = stream.read()
@@ -50,7 +54,7 @@ def branch_in_remote(branch):
 
 # Git pull remote to local
 def pull_issues():
-    cmd = 'git checkout dit-issues; git pull origin dit-issues'
+    cmd = 'git checkout git-issues; git pull origin git-issues'
     stream = os.popen(cmd)
     output = stream.read()
     return output
