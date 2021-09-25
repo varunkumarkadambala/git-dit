@@ -57,18 +57,25 @@ def add_issue(args):
                   "createdAt": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                   }
     issue = git.create_issue(issue_id, issue_json)
-    return issue_id, issue_json
+    return issue_id, issue_json, issue
+
+
+argsp = argsubparsers.add_parser("comment", help="Add a new comment for an issue")
+argsp.add_argument("message",
+                   help="Description for the comment on the issue")
+argsp.add_argument("id",
+                   help="ID of the issue to be commented on")
 
 
 # Add Comment to an issue
-def add_comment(issue_id, comment):
+def add_comment(args):
     comment_id = str(uuid.uuid4())
-    comment_data = {"message": comment,
+    comment_data = {"message": args.message,
                     "commentBy": git.active_user(),
                     "commentAt": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                     }
-    comment = git.create_comment(issue_id, comment_id, comment_data);
-    return comment_id, comment
+    comment = git.create_comment(args.id, comment_id, comment_data)
+    return comment_id, comment_data, comment
 
 
 # Delete an Issue - Doesn't really delete the issue, but changes the status to deleted

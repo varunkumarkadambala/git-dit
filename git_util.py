@@ -87,7 +87,7 @@ def create_issue(issue_id, data):
 
 def create_comment(issue_id, comment_id, data):
     current = current_branch()
-    cmd = 'git checkout dit-issues'
+    cmd = 'git checkout git-issues'
     process = os.popen(cmd)
     process = process.read()
     new_dir = 'issues/' + issue_id + '/comments/'
