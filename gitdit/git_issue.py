@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import git_util as git
+from gitdit.utils import git_util as git
 import uuid
 import sys
 from datetime import datetime

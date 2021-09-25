@@ -18,7 +18,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'git-issue = git_issue.git_issue:main'
+            'git-dit = gitdit.git_issue:main'
         ]
     },
     classifiers=(
