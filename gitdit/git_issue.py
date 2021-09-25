@@ -16,7 +16,7 @@ def main(argv=sys.argv[1:]):
 
     if args.command == "init":
         init_repo(args)
-    elif args.command == "new":
+    elif args.command == "issue":
         add_issue(args)
     elif args.command == "comment":
         add_comment(args)
@@ -25,9 +25,9 @@ def main(argv=sys.argv[1:]):
     elif args.command == "close":
         close_issue(args)
     elif args.command == "show":
-        view_issues(args)
-    elif args.command == "get-comments":
-        view_comments(args)
+        cmd_show(args)
+    elif args.command == "push":
+        push_issues(args)
 
 
 # My Functionalities
@@ -53,7 +53,7 @@ def init_repo(args):
 # 2. Get User Details
 # 3. Generate Issue Id
 # 4. Create a issue.json file
-argsp = argsubparsers.add_parser("new", help="Create a new issue")
+argsp = argsubparsers.add_parser("issue", help="Create a new issue")
 argsp.add_argument("message",
                    help="Description for reporting the issue")
 
@@ -67,6 +67,7 @@ def add_issue(args):
                   "createdAt": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                   }
     issue = git.create_issue(issue_id, issue_json)
+    print("Created Issue with id {}".format(issue_id))
     return issue_id, issue_json, issue
 
 
@@ -76,7 +77,7 @@ def add_issue(args):
 argsp = argsubparsers.add_parser("comment", help="Add a new comment for an issue")
 argsp.add_argument("message",
                    help="Description for the comment on the issue")
-argsp.add_argument("id",
+argsp.add_argument("-i", "--issue_id", dest="id",
                    help="ID of the issue to be commented on")
 
 
@@ -92,49 +93,58 @@ def add_comment(args):
 
 # Delete an Issue - Doesn't really delete the issue, but changes the status to deleted
 argsp = argsubparsers.add_parser("delete", help="Delete an issue")
-argsp.add_argument("id",
+argsp.add_argument("type", choices=['issue', 'comment'])
+argsp.add_argument("-i", "--issue_id", dest="id",
                    help="ID of the issue to be deleted")
 
 
 def delete_issue(args):
-    return args.id, git.update_issue_status(id, 'Deleted')
+    assert args.type == "issue"
+    return args.id, git.update_issue_status(args.id, 'Deleted')
 
 
 # Close an Issue
 argsp = argsubparsers.add_parser("close", help="Close an issue")
-argsp.add_argument("id",
-                   help="ID of the issue to be closed")
+argsp.add_argument("type", choices=['issue', 'comment'])
+argsp.add_argument("-i", "--issue_id", dest="id",
+                   help="ID of the issue to be  closed")
 
 
 def close_issue(args):
-    return args.id, git.update_issue_status(id, 'Closed')
+    assert args.type == "issue"
+    return args.id, git.update_issue_status(args.id, 'Closed')
 
 
 # View all Issues
 argsp = argsubparsers.add_parser("show", help="View all issues")
+argsp.add_argument("type", choices=['issues', 'comments'])
+argsp.add_argument("-i", "--issue_id", dest="id",
+                   help="ID of the issue to be deleted")
+
+
+def cmd_show(args):
+    if args.type == "issues":
+        view_issues(args)
+    elif args.type == "comments":
+        view_comments(args)
 
 
 def view_issues(args):
     issues = git.fetch_issues()
-    str_fmt = "{:<45} {:<25} {:<8}"
-    print(str_fmt.format('Issue', 'Created by', 'Status'))
+    issues = sorted(issues, key=lambda issue: issue['status'])
+    str_fmt = "{:<40} {:<45} {:<15} {:<8}"
+    print(str_fmt.format('IssueId', 'Desciption','Created by', 'Status'))
     for issue in issues:
-        print(str_fmt.format(issue['message'], issue['createdBy'], issue['status']))
+        print(str_fmt.format(issue['id'],issue['message'], issue['createdBy'], issue['status']))
     return issues
-
-
-# View all Comments on an issues
-argsp = argsubparsers.add_parser("get-comments", help="View all comments on an issue")
-argsp.add_argument("id",
-                   help="ID of the issue")
 
 
 def view_comments(args):
     comments = git.fetch_comments(args.id)
-    str_fmt = "{:<45} {:<25}"
-    print(str_fmt.format('Comment', 'Comment by'))
+    str_fmt = "{:<40} {:<45} {:<25}"
+    print(str_fmt.format('CommentId', 'Comment', 'Comment by'))
     for comment in comments:
-        print(str_fmt.format(comment['message'], comment['commentBy']))
+        print(str_fmt.format(comment['id'], comment['message'], comment['commentBy']))
     return comments
 
 

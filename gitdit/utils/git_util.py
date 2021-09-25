@@ -108,13 +108,13 @@ def update_issue_status(id, status):
     cmd = 'git checkout git-issues'
     process = os.popen(cmd)
     process = process.read()
-    json_path = 'issues/' + id + '/issue.json'
+    json_path = 'issues/' + str(id) + '/issue.json'
     with open(json_path, "r") as jsonFile:
         data = json.load(jsonFile)
     data["status"] = status
     with open(json_path, "w") as jsonFile:
         json.dump(data, jsonFile)
-    cmd = 'git add ' + json_path + ';git commit -m "Deleting issue ' + id + '";git checkout ' + current
+    cmd = 'git add ' + json_path + ';git commit -m "Deleting issue ' + str(id) + '";git checkout ' + current
     stream = os.popen(cmd)
     output = stream.read()
     return output
@@ -131,6 +131,7 @@ def fetch_issues():
         if os.path.exists(json_path):
             with open(json_path, "r") as jsonFile:
                 data = json.load(jsonFile)
+                data["id"] = str(issue)
                 issues.append(data)
 
     cmd = 'git checkout ' + current
@@ -145,14 +146,17 @@ def fetch_comments(id):
     process = os.popen(cmd)
     process = process.read()
     comments = []
-    comments_dir = 'issues/{0}/comments/'.format(id)
+    comments_dir = 'issues/' + str(id) + '/comments/'
+    print(comments_dir)
     if not os.path.exists(comments_dir):
+        print("No Fucking Comments")
         return comments
     for comment in os.listdir(comments_dir):
         try:
             json_path = comments_dir + comment
             with open(json_path, "r") as jsonFile:
                 data = json.load(jsonFile)
+                data["id"] = str(comment)[:-5]
                 comments.append(data)
         except:
             continue
@@ -164,7 +168,12 @@ def fetch_comments(id):
 
 def push_issues():
     current = current_branch()
-    cmd = 'git checkout git-issues; git push origin git-issues; git checkout {}'.format(current)
+    cmd = 'git checkout git-issues; git push origin git-issues;'
     stream = os.popen(cmd)
     output = stream.read()
+    cmd = 'git checkout ' + current
+    process = os.popen(cmd)
+    process = process.read()
     return output
+
+
