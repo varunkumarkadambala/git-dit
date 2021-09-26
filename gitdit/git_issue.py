@@ -133,7 +133,7 @@ def view_issues(args):
     issues = git.fetch_issues()
     issues = sorted(issues, key=lambda issue: issue['status'])
     str_fmt = "{:<40} {:<45} {:<15} {:<8}"
-    print(str_fmt.format('IssueId', 'Desciption','Created by', 'Status'))
+    print(str_fmt.format('IssueId', 'Description', 'Created by', 'Status'))
     for issue in issues:
         print(str_fmt.format(issue['id'],issue['message'], issue['createdBy'], issue['status']))
     return issues

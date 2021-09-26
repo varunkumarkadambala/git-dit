@@ -109,6 +109,9 @@ def update_issue_status(id, status):
     process = os.popen(cmd)
     process = process.read()
     json_path = 'issues/' + str(id) + '/issue.json'
+    if not os.path.exists(json_path):
+        print("Issue does not exist")
+        return None
     with open(json_path, "r") as jsonFile:
         data = json.load(jsonFile)
     data["status"] = status
@@ -125,6 +128,7 @@ def fetch_issues():
     cmd = 'git checkout git-issues'
     process = os.popen(cmd)
     process = process.read()
+    assert os.path.exists('issues'), "No Issues Recorded Yet"
     issues = []
     for issue in os.listdir('issues'):
         json_path = 'issues/' + str(issue) + '/issue.json'
@@ -149,7 +153,7 @@ def fetch_comments(id):
     comments_dir = 'issues/' + str(id) + '/comments/'
     print(comments_dir)
     if not os.path.exists(comments_dir):
-        print("No Fucking Comments")
+        print("No Comments")
         return comments
     for comment in os.listdir(comments_dir):
         try:
