@@ -151,7 +151,6 @@ def fetch_comments(id):
     process = process.read()
     comments = []
     comments_dir = 'issues/' + str(id) + '/comments/'
-    print(comments_dir)
     if not os.path.exists(comments_dir):
         print("No Comments")
         return comments
