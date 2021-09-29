@@ -39,13 +39,14 @@ argsp = argsubparsers.add_parser("init", help="Initialize a new branch for issue
 
 def init_repo(args):
     assert git.is_git_repo(), "Not a Git repository"
+    if git.branch_in_remote('git-issues'):
+        git.fetch_branch_from_remote('git-issues')
     if git.branch_in_local('git-issues'):
         pass
     else:
         git.create_empty_local_branch('git-issues')
-    if git.branch_in_remote('git-issues'):
-        git.pull_issues()
-    return "New Issues Branch Initiated in repository"
+    print("New Issues Branch Initiated in repository")
+    return
 
 
 # Create Issue
@@ -88,6 +89,7 @@ def add_comment(args):
                     "commentAt": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
                     }
     comment = git.create_comment(args.id, comment_id, comment_data)
+    print("Created Comment with id {}".format(comment_id))
     return comment_id, comment_data, comment
 
 
@@ -100,6 +102,7 @@ argsp.add_argument("-i", "--issue_id", dest="id",
 
 def delete_issue(args):
     assert args.type == "issue"
+    print("Deleting issue with id {}".format(args.id))
     return args.id, git.update_issue_status(args.id, 'Deleted')
 
 
@@ -112,6 +115,7 @@ argsp.add_argument("-i", "--issue_id", dest="id",
 
 def close_issue(args):
     assert args.type == "issue"
+    print("Closing issue with id {}".format(args.id))
     return args.id, git.update_issue_status(args.id, 'Closed')
 
 
@@ -131,6 +135,9 @@ def cmd_show(args):
 
 def view_issues(args):
     issues = git.fetch_issues()
+    if len(issues) == 0:
+        print("No Issues to be displayed")
+        return issues
     issues = sorted(issues, key=lambda issue: issue['status'])
     str_fmt = "{:<40} {:<45} {:<15} {:<8}"
     print(str_fmt.format('IssueId', 'Description', 'Created by', 'Status'))
@@ -141,6 +148,9 @@ def view_issues(args):
 
 def view_comments(args):
     comments = git.fetch_comments(args.id)
+    if len(comments) == 0:
+        print("No Comments to be displayed")
+        return comments
     str_fmt = "{:<40} {:<45} {:<25}"
     print(str_fmt.format('CommentId', 'Comment', 'Comment by'))
     for comment in comments:
