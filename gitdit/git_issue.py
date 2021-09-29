@@ -45,7 +45,7 @@ def init_repo(args):
         pass
     else:
         git.create_empty_local_branch('git-issues')
-    print("New Issues Branch Initiated in repository")
+    print("Issue Tracker Initialised")
     return
 
 
